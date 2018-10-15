@@ -1,7 +1,0 @@
-FROM microsoft/mssql-server-windows-developer
-
-EXPOSE 1433
-ENV SA_PASSWORD=Password1!
-ENV ACCEPT_EULA=Y
-
-SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop';"]
