@@ -6,8 +6,6 @@
 $targetRestorePath = "C:\MSSQLDATA\DATA\"
 $env:restore_dbs = "[{'dbName':'ProductCatalog','DBLogicalName':'Bunnings.CommerceServer.ProductCatalog', 'Bakfilename':'C:\\mssqldata\\ProductCatalog.bak'}]"
 
-Write-Host "SA Password in Env $env:sa_password"
-
 $restore_dbs = $env:restore_dbs    
 Write-Host "Database(s) to restore $restore_dbs"
 
@@ -25,7 +23,7 @@ if ($null -ne $dbs -And $dbs.Length -gt 0)
         $targetLogialDb = $db.DBLogicalName
         $targetLogialDbLog = $db.DBLogicalName + "_log"
        
-        $sqlcmd = "RESTORE DATABASE [$targetDbName] FROM DISK = '$targetDbBakFile' WITH FILE = 1, MOVE N'$targetLogialDb' TO N'$targetRestorePath$targetLogialDb" + ".mdf'," + " MOVE N'$targetLogialDbLog' TO N'$targetRestorePath$targetLogialDbLog" + ".ldf'"  
+        $sqlcmd = "RESTORE DATABASE [$targetDbName] FROM DISK = '$targetDbBakFile' WITH REPLACE, MOVE N'$targetLogialDb' TO N'$targetRestorePath$targetLogialDb" + ".mdf'," + " MOVE N'$targetLogialDbLog' TO N'$targetRestorePath$targetLogialDbLog" + ".ldf'"  
 
         Write-Host $sqlcmd     
         Write-Verbose "Invoke-Sqlcmd -Query $($sqlcmd)"  
@@ -33,5 +31,8 @@ if ($null -ne $dbs -And $dbs.Length -gt 0)
     }
 }
 
-Write-Host 'Spinning up process to continue running this container'
-$host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")|out-null 
+Write-Host "Running image start scripts."
+.\start -sa_password $env:sa_password -ACCEPT_EULA $env:ACCEPT_EULA -attach_dbs \"$env:attach_dbs\" -Verbose
+
+# Write-Host 'Spinning up process to continue running this container'
+# $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")|out-null 
