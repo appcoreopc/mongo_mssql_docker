@@ -3,11 +3,11 @@
 # $targetRestorePath = "C:\MSSQLDATA\DATA\"
 # $env:restore_dbs = "[{'dbName':'ProductCatalog','DBLogicalName':'Bunnings.CommerceServer.ProductCatalog', 'Bakfilename':'C:\\mssqldata\\ProductCatalog.bak'}]"
 
-$targetRestorePath = "C:\MSSQLDATA\DATA\"
+$targetRestorePath = $env:targetRestorePath
 $env:restore_dbs = "[{'dbName':'ProductCatalog','DBLogicalName':'Bunnings.CommerceServer.ProductCatalog', 'Bakfilename':'C:\\mssqldata\\ProductCatalog.bak'}]"
 
 $restore_dbs = $env:restore_dbs    
-Write-Host "Database(s) to restore $restore_dbs"
+Write-Host "Database(s) to restore $restore_dbs to $targetRestorePath"
 
 $dbs = $restore_dbs | ConvertFrom-Json
 
@@ -33,6 +33,3 @@ if ($null -ne $dbs -And $dbs.Length -gt 0)
 
 Write-Host "Running image start scripts."
 .\start -sa_password $env:sa_password -ACCEPT_EULA $env:ACCEPT_EULA -attach_dbs \"$env:attach_dbs\" -Verbose
-
-# Write-Host 'Spinning up process to continue running this container'
-# $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")|out-null 
